@@ -1,11 +1,6 @@
 package org.cathay.combination;
 
-import com.sun.tools.corba.se.idl.toJavaPortable.InterfaceGen;
-
 import java.util.*;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * FIXME: Example 1
