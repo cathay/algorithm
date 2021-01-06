@@ -42,4 +42,24 @@ public class LongestPalindrome {
         return true;
     }
 
+    public String breakPalindrome(String palindrome) {
+        char[] chars = palindrome.toCharArray();
+        int i = 0;
+        while (i < chars.length && chars[i] == 'a') {
+            i++;
+        }
+
+        if (i == chars.length) {
+            // only 1 char
+            if (i == 1) {
+                return "";
+            }
+            //All chars are 'a'
+            chars[i - 1] = 'b';
+            return new String(chars);
+        }
+
+        chars[i] = 'b';
+        return new String(chars);
+    }
 }
