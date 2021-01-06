@@ -11,6 +11,7 @@ public class FunArrayUtils {
         FunArrayUtils solution = new FunArrayUtils();
         //System.out.println(solution.findKthPositive(new int[]{2, 3, 4, 7, 11}, 5));
         System.out.println(solution.findKthPositive(new int[]{1, 2, 3, 4}, 2));
+        System.out.println(System.currentTimeMillis() );
     }
 
     public int findKthPositive(int[] arr, int k) {
