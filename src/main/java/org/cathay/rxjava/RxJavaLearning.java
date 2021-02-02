@@ -4,11 +4,13 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableEmitter;
 import io.reactivex.rxjava3.observables.ConnectableObservable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import org.cathay.datastructure.Pair;
 import org.reactivestreams.Subscriber;
 
 import java.util.concurrent.TimeUnit;
 
 import static io.reactivex.rxjava3.core.Observable.timer;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class RxJavaLearning {
@@ -18,15 +20,47 @@ public class RxJavaLearning {
 //        observable.subscribeOn(Schedulers.io()).subscribe(i -> System.out.println("i=i+1:" + (i + 1) + Thread.currentThread().getName()));
 //        observable.subscribe(i -> System.out.println("i=i*2:" + (i * 2) + Thread.currentThread().getName()));
 
+//
+//        o.subscribeOn(Schedulers.newThread())
+//                .delay(1, SECONDS)
+//                .subscribe(System.out::println);
 
-        o.subscribeOn(Schedulers.newThread())
-                .delay(1, SECONDS)
+        Observable<Integer> progress = Observable.range(1, 5);
+        progress.scan(Integer::sum)
                 .subscribe(System.out::println);
 
+        speakDemo();
 
-        delayAndTimer();
-        sleep(8, SECONDS);
+        sleep(15, SECONDS);
         System.out.println("Main thread.......");
+    }
+
+    static void speakDemo() {
+        Observable<String> alice = speak(
+                "To be, or not to be: that is the question", 110);
+        Observable<String> bob = speak(
+                "Though this be madness, yet there is method in't", 90);
+        Observable<String> jane = speak("There are more things in Heaven and Earth, " +
+                "Horatio, than are dreamt of in your philosophy", 100);
+
+        Observable.merge(
+                alice.map(w -> "Alice:" + w),
+                bob.map(w -> "Bob:" + w),
+                jane.map(w -> "Jane:" + w)
+        ).subscribe(System.out::println);
+    }
+
+    static Observable<String> speak(String quote, long millisPerChar) {
+        String[] tokens = quote.replaceAll("[:,]", "").split(" ");
+        Observable<String> words = Observable.fromArray(tokens);
+        Observable<Long> absoluteDelay = words
+                .map(String::length)
+                .map(len -> len * millisPerChar)
+                .scan((total, current) -> total + current);
+        return words
+                .zipWith(absoluteDelay.startWith(Observable.just(0L)), Pair::of)
+                .flatMap(pair -> Observable.just(pair.first)
+                        .delay(pair.second, MILLISECONDS));
     }
 
     static void delayAndTimer() {
@@ -37,15 +71,15 @@ public class RxJavaLearning {
                         timer(word.length(), SECONDS, Schedulers.io()).map(x -> word))
                 .subscribe(RxJavaLearning::println);
 
-//        Observable
-//                .just("Lorem", "ipsum", "dolor", "sit", "amet",
-//                        "consectetur", "adipiscing", "elit")
-//                .delay(word -> timer(word.length(), SECONDS))
-//                .subscribe(System.out::println);
+        Observable
+                .just("Lorem", "ipsum", "dolor", "sit", "amet",
+                        "consectetur", "adipiscing", "elit")
+                .delay(word -> timer(word.length(), SECONDS))
+                .subscribe(System.out::println);
     }
 
     private static void println(String s) {
-        System.out.println(s +":" + Thread.currentThread().getName());
+        System.out.println(s + ":" + Thread.currentThread().getName());
     }
 
     static Observable<String> createChainObservable() {
