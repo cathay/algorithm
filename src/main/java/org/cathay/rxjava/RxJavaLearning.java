@@ -1,10 +1,8 @@
 package org.cathay.rxjava;
 
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.ObservableEmitter;
 import io.reactivex.rxjava3.observables.ConnectableObservable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import org.reactivestreams.Subscriber;
 
 import java.util.concurrent.TimeUnit;
 
@@ -24,9 +22,21 @@ public class RxJavaLearning {
                 .subscribe(System.out::println);
 
 
-        delayAndTimer();
-        sleep(8, SECONDS);
+        //delayAndTimer();
+
+
+
+        sleep(4, SECONDS);
         System.out.println("Main thread.......");
+    }
+
+    static void lazy() {
+        Observable<Integer> infinite = Observable
+                .range(0, Integer.MAX_VALUE)
+                .takeWhile(i -> i <20);
+
+        infinite.take(21)
+                .subscribe(System.out::println);
     }
 
     static void delayAndTimer() {
