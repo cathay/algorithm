@@ -2,19 +2,22 @@ package org.cathay.rxjava;
 
 import io.reactivex.rxjava3.core.Observable;
 
-import static org.cathay.rxjava.SchedulerFactory.*;
+import static org.cathay.rxjava.SchedulerFactory.schedulerA;
+import static org.cathay.rxjava.SchedulerFactory.schedulerB;
 
 public class CreateObservable {
 
     public static void main(String[] args) {
         //notExecutedIfNotSubscribed();
-       // executeOnSchedulerA();
-        mixSchedulersOnObserverAndSubscriber();
+        // executeOnSchedulerA();
+
+        //mixSchedulersOnObserverAndSubscriber();
     }
 
     static void mixSchedulersOnObserverAndSubscriber() {
         log("Starting");
-        final Observable<String> obs = simple(); log("Created");
+        final Observable<String> obs = simple();
+        log("Created");
         obs
                 .map(x -> x + "1")
                 .doOnNext(x -> log("Found 1: " + x))
