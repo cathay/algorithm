@@ -43,7 +43,13 @@ public class RxJavaLearning {
         Observable<String> jane = speak("There are more things in Heaven and Earth, " +
                 "Horatio, than are dreamt of in your philosophy", 100);
 
-        Observable.merge(
+//        Observable.merge(
+//                alice.map(w -> "Alice:" + w),
+//                bob.map(w -> "Bob:" + w),
+//                jane.map(w -> "Jane:" + w)
+//        ).subscribe(System.out::println);
+
+        Observable.concat(
                 alice.map(w -> "Alice:" + w),
                 bob.map(w -> "Bob:" + w),
                 jane.map(w -> "Jane:" + w)
