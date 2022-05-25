@@ -7,6 +7,7 @@ import org.cathay.datastructure.Pair;
 import org.reactivestreams.Subscriber;
 
 
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import static io.reactivex.rxjava3.core.Observable.timer;
@@ -15,24 +16,76 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class RxJavaLearning {
 
-    public static void main(String[] args) throws InterruptedException {
-        Observable<Integer> o = Observable.range(1, 3);
-//        observable.subscribeOn(Schedulers.io()).subscribe(i -> System.out.println("i=i+1:" + (i + 1) + Thread.currentThread().getName()));
-//        observable.subscribe(i -> System.out.println("i=i*2:" + (i * 2) + Thread.currentThread().getName()));
+    static int count = 0;
 
+    public static void main(String[] args) throws InterruptedException {
+        Observable<Integer> observable = Observable.range(1, 5);
+        observable
+                .flatMap(
+                        x ->  Observable.just(x)
+                                .doOnNext(s -> System.out.println("flatMap:"+Thread.currentThread().getName()))
+                                .subscribeOn(Schedulers.io()))
+//                .observeOn(Schedulers.newThread())
+//                .subscribeOn(Schedulers.newThread())
+                .map(x -> {
+                    System.out.println("map:"+Thread.currentThread().getName());
+                    return x;
+                })
+//                .subscribeOn(Schedulers.computation())
+//                .observeOn(Schedulers.computation())
+                .subscribe(i -> {
+                    Thread.sleep(1000);
+                    System.out.println("i=" + i + " " + Thread.currentThread().getName());
+                });
+
+//        Observable.just("long", "longer", "longest")
+//                .flatMap(v ->
+//                        performLongOperation(v)
+//                                .doOnNext(s -> System.out.println("processing item on thread " + Thread.currentThread().getName()))
+//                                .subscribeOn(Schedulers.newThread()))
+//                .subscribe(length -> System.out.println("received item length " + length + " on thread " + Thread.currentThread().getName()));
+
+
+        Thread.sleep(7000);
 //
 //        o.subscribeOn(Schedulers.newThread())
 //                .delay(1, SECONDS)
 //                .subscribe(System.out::println);
 
-        Observable<Integer> progress = Observable.range(1, 5);
-        progress.scan(Integer::sum)
-                .subscribe(System.out::println);
 
-        speakDemo();
+//        Observable.range(1, 10)
+//                .flatMap(x -> {
+//                    if (x == 4 && count == 0) {
+//                        count++;
+////                        return Observable.error(new RuntimeException("Something went wrong!"));
+//                    }
+//                     return Observable.just(x);
+//                })
+//                .retry(2)
+//                .subscribe(i -> {
+//                    System.out.println(Thread.currentThread().getName() + ".." + i);
+//                },
+//                        err -> System.out.println(err.toString()));
+//        .forEach(i -> System.out.println(Thread.currentThread().getName() + ".." + i) );
+//        Observable<Integer> progress = Observable.range(1, 5);
+//        progress.scan(Integer::sum)
+//                .subscribe(System.out::println);
+//
+//        speakDemo();
 
-        sleep(15, SECONDS);
+//        sleep(15, SECONDS);
         System.out.println("Main thread.......");
+    }
+
+    protected static Observable<Integer> performLongOperation(String v) {
+        Random random = new Random();
+        try {
+            Thread.sleep(random.nextInt(3) * 1000);
+            return Observable.just(v.length());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     static void speakDemo() {
@@ -73,7 +126,7 @@ public class RxJavaLearning {
     static void lazy() {
         Observable<Integer> infinite = Observable
                 .range(0, Integer.MAX_VALUE)
-                .takeWhile(i -> i <20);
+                .takeWhile(i -> i < 20);
 
         infinite.take(21)
                 .subscribe(System.out::println);
