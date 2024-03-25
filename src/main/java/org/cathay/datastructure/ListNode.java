@@ -7,34 +7,47 @@ public class ListNode {
     int val;
     ListNode next;
 
-    ListNode() {
-    }
-
-    ListNode(int val) {
+    public ListNode(int val) {
         this.val = val;
     }
 
-    ListNode(int val, ListNode next) {
+    public ListNode(int val, ListNode next) {
         this.val = val;
         this.next = next;
     }
 
+    public boolean isEndNode() {
+        return next == null;
+    }
+
+    public ListNode getNext() {
+        return next;
+    }
+
+    public int getVal() {
+        return val;
+    }
+
+    public void setNext(ListNode next) {
+        this.next = next;
+    }
+
     public static void main(String[] args) {
-//        System.out.println(
-//                deleteDuplicates(
-//                        new ListNode(1, new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(3, new ListNode(4))))))
-//                ));
-//
-//        System.out.println(
-//                deleteDuplicates(
-//                        new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(3, new ListNode(4))))))
-//        );
-//
-//        System.out.println(
-//                deleteDuplicates(
-//                        new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(3,
-//                                new ListNode(4, new ListNode(4, new ListNode(5))))))))
-//        );
+        System.out.println(
+                deleteDuplicates(
+                        new ListNode(1, new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(3, new ListNode(4))))))
+                ));
+
+        System.out.println(
+                deleteDuplicates(
+                        new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(3, new ListNode(4))))))
+        );
+
+        System.out.println(
+                deleteDuplicates(
+                        new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(3,
+                                new ListNode(4, new ListNode(4, new ListNode(5))))))))
+        );
 
         System.out.println(
                 deleteDuplicates(
